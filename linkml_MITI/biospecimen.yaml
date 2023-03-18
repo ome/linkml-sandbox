@@ -1,0 +1,110 @@
+id: https://www.miti-consortium.org/biospecimen
+name: biospecimen
+description: linkml metadata schema based on MITI biospecimen metadata
+prefixes:
+  linkml: https://w3id.org/linkml/
+  schema: http://schema.org/
+  obo: http://purl.obolibrary.org/obo/
+imports:
+  - linkml:types
+default_range: string
+
+classes:
+  Biospecimen:
+    class_uri: obo:NCIT_C70699 # obo:Biospecimen
+    slots:
+      - has_specimen_id
+      - is_biospecimen_type
+      - has_parent
+      - acquired_with
+  Research_participant:
+    class_uri: obo:NCIT_C41189 # obo:Research subject
+
+
+slots:
+  has_specimen_id:
+    identifier: true
+    slot_uri: obo:NCIT_C178872 # obo:Biospecimen Identifier
+    required: true
+  is_biospecimen_type:
+    slot_uri: obo:NCIT_C70713 # obo:Biospecimen type
+    required: true
+    range: biospecimen_type
+  has_parent:
+    slot_uri: obo:NCIT_C175532 # obo:Parent Biospecimen
+    required: true
+    any_of:
+      - range: Research_participant
+      - range: Biospecimen
+  acquired_with:
+    range: acquisition_method
+    required: true
+  Analyte Type:
+    slot_uri: obo:NCIT_C177557 # obo:Molecular Test Analyte Type
+    required: true
+  Protocol link:
+    slot_uri: obo:NCIT_C132299 # obo:Protocol identifier
+
+enums:
+  biospecimen_type:
+    permissible_values:
+      TISSUE:
+        description: >- 
+          An anatomical structure consisting of similarly specialized cells and intercellular matrix, aggregated 
+          according to genetically determined spatial relationships, performing a specific function.
+        meaning: obo:NCIT_C12801 # obo:Tissue
+      BONE MARROW:
+        description: The tissue occupying the spaces of bone.
+        meaning: obo:NCIT_C12431 # obo:Bone Marrow
+      CELL BLOCK:
+        todos:  Unclear what is meant here, map to ontology
+      BLOOD:
+        description: >-
+          A tissue with red blood cells, white blood cells, platelets, and other substances suspended in fluid called 
+          plasma.
+        meaning: obo:NCIT_C12434 # obo:Blood
+      FLUIDS:
+        description: >-
+          Liquid substances produced by living organisms to fulfill specific functions or excreted as waste. Secretions 
+          do not include hormones or enzymes.
+        meaning: obo:NCIT_C13452 # obo: Other body fluids and secretions
+  acquisition_method:
+    permissible_values:
+      AUTOPSY:
+        description: >-
+          A postmortem examination of the body that includes an examination of the internal organs and structures after 
+          dissection to determine the cause of death and the nature of pathological changes.
+        meaning: obo:NCIT_C25153 # obo:Autopsy
+      BIOPSY:
+        description: >-
+          A specimen collection that obtains a sample of tissue or cell from a living multicellular organism body for 
+          diagnostic purposes by means intended to be minimally invasive.
+        meaning: obo:OBI_0002650 # obo:Biopsy
+      SURGICAL RESECTION:
+        description: The surgical removal of an organ or a part of an organ.
+        meaning: obo:NCIT_C158758 # obo:Surgical Resection
+      PUNCH BIOPSY:
+        description: Removal of a disk of skin tissue, for microscopic examination, using a punch.
+        meaning: obo:NCIT_C28743 # obo:Punch Biopsy
+      SHAVE BIOPSY:
+        description: >- 
+          Removal skin tissue, for microscopic examination, using a blade oriented in the horizontal plane of the skin 
+          surface.
+        meaning: obo:NCIT_C15387 # obo:Shave Biopsy
+      EXCISION:
+        description: The surgical removal of a lesion, often as part of a biopsy and with healthy margins.
+        meaning: obo:NCIT_C15232 # obo:Excision
+      RE-EXCISION:
+        description: >-
+          A surgical procedure to remove the remaining abnormal tissues from the body, not completely removed in an 
+          earlier attempt.
+        meaning: obo:NCIT_C48600 # obo:Re-Excision
+      SENTINEL NODE BIOPSY:
+        description: >- 
+          Surgical removal and examination of the sentinel node, the lymph node which is first in
+          receiving the lymphatic drainage of a specified anatomic location and is most likely to be affected by 
+          the lymphatic spread of cancer.
+        meaning: obo:NCIT_C15667 # obo:Sentinel Lymph Node Biopsy
+      LYMPHADENECTOMY:
+        description: Surgical removal of lymph nodes, usually done to assess the spread of cancer.
+        meaning: obo:NCIT_C15275 # obo:Lymphadenectomy
