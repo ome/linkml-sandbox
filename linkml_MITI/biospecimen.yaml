@@ -24,6 +24,7 @@ classes:
       - has_parent
       - acquired_with
       - processed_with_protocol
+      - has_timepoint_label
   Research_participant:
     name: Research_participant
     class_uri: obo:NCIT_C41189 # obo:Research subject
@@ -68,6 +69,11 @@ slots:
   processed_with_protocol:
     description: Predicate protocol slot for biospecimen class to indicate which lab protocol was used to create data.
     slot_uri: obo:NCIT_C132299 # obo:Protocol identifier
+  has_timepoint_label:
+    description: Predicate slot timepoint label for the class biospecimen
+    required: true
+    range: timepoint_label
+
 
 enums:
   biospecimen_type:
@@ -143,3 +149,18 @@ enums:
       LYMPHADENECTOMY:
         description: Surgical removal of lymph nodes, usually done to assess the spread of cancer.
         meaning: obo:NCIT_C15275 # obo:Lymphadenectomy
+  timepoint_label:
+    name: timepoint_label
+    enum_uri: obo:NCIT_C68568 # obo:Timepoint
+    description: A specific point in the time continuum, including those established relative to an event.
+    permissible_values:
+      # TODO some values have no URI / IRI. Not found in ontobee. Some terms also ambigious.
+      BASELINE:
+        description: The point in time that acts as a fixed reference point to an event.
+        meaning: obo:NCIT_C82576 # obo:Reference Time Point
+      END_OF_TREATMENT:
+        description: Timepoint soon after treatment has ended (not more than 3 months).
+      OVERALL_SURVIVAL:
+      FINAL:
+        description: The last time point.
+        meaning: obo:NCIT_C182339 # obo:Final Time Point
