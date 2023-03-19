@@ -11,42 +11,72 @@ default_range: string
 
 classes:
   Biospecimen:
+    name: Biospecimen
     class_uri: obo:NCIT_C70699 # obo:Biospecimen
+    description: >-
+      Any material sample taken from a biological entity for testing, diagnostic, propagation, treatment or research
+      purposes, including a sample obtained from a living organism or taken from the biological object after halting of
+      all its life functions. Biospecimen can contain one or more components including but not limited to cellular 
+      molecules, cells, tissues, organs, body fluids, embryos, and body excretory products.
     slots:
-      - has_specimen_id
+      - specimen_id
       - is_biospecimen_type
       - has_parent
       - acquired_with
+      - processed_with_protocol
   Research_participant:
+    name: Research_participant
     class_uri: obo:NCIT_C41189 # obo:Research subject
-
+    description: >-
+      A living person who is observed, analyzed, examined, investigated, experimented upon, and/or treated in the 
+      course of a clinical study. This includes studies where an investigator obtains identifiable private information 
+      or data through the intervention or interaction with the individual.
+    slots:
+      - subject_id
 
 slots:
-  has_specimen_id:
+  specimen_id:
+    name: specimen_id
+    slot_uri: obo:NCIT_C178872 # obo:
+    description: A unique identifier assigned to a biological specimen.
     identifier: true
-    slot_uri: obo:NCIT_C178872 # obo:Biospecimen Identifier
-    required: true
+  subject_id:
+    slot_uri: obo:NCIT_C83083 # obo:Subject identifier
+    description: A sequence of characters used to identify, name, or characterize a trial or study subject.
+    identifier: true
   is_biospecimen_type:
-    slot_uri: obo:NCIT_C70713 # obo:Biospecimen type
+    description: Predicate biospecimen type slot for the biospecimen class.
     required: true
     range: biospecimen_type
   has_parent:
+    # TODO need to refine this so class biospecimen is either of class specimen or adjacent / parent biospecimen based on usage.
     slot_uri: obo:NCIT_C175532 # obo:Parent Biospecimen
+    description: Predicate parent slot for biospecimen class.
     required: true
     any_of:
       - range: Research_participant
       - range: Biospecimen
   acquired_with:
+    description: Predicate acquired with acquisition method slot for biospecimen class.
     range: acquisition_method
     required: true
-  Analyte Type:
+  # TODO change this into proper predicate, create analyte type class. Check whether slot_uri is correct
+  Analyte_type:
     slot_uri: obo:NCIT_C177557 # obo:Molecular Test Analyte Type
+    description: The type of biospecimen subjected to analysis.
     required: true
-  Protocol link:
+  processed_with_protocol:
+    description: Predicate protocol slot for biospecimen class to indicate which lab protocol was used to create data.
     slot_uri: obo:NCIT_C132299 # obo:Protocol identifier
 
 enums:
   biospecimen_type:
+    name: biospecimen_type
+    enum_uri: obo:NCIT_C70713 # obo:Biospecimen type
+    description: >-
+      The type of a material sample taken from a biological entity for testing, diagnostic, propagation, treatment or 
+      purposes. This includes particular types of cellular molecules, cells, tissues, organs, body fluids, embryos, 
+      and body excretory substances.
     permissible_values:
       TISSUE:
         description: >- 
@@ -69,6 +99,11 @@ enums:
           do not include hormones or enzymes.
         meaning: obo:NCIT_C13452 # obo: Other body fluids and secretions
   acquisition_method:
+    name: acquisition_method
+    enum_uri: obo:NCIT_C70700 # obo:Biospecimen Collection Method
+    description: >- 
+      A method or procedure by which biological material is obtained from a subject for testing, diagnostic, treatment, 
+      or research purposes.
     permissible_values:
       AUTOPSY:
         description: >-
