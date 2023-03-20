@@ -27,6 +27,7 @@ classes:
       - processed_with_protocol
       - has_timepoint_label
       - has_tumor_type
+      - has_preservation_method
   Research_participant:
     name: Research_participant
     class_uri: obo:NCIT_C41189 # obo:Research subject
@@ -77,7 +78,12 @@ slots:
     range: timepoint_label
   has_tumor_type:
     description: Predicate slot tumor type for the class biospecimen
+    required: true
     range: tumor_type
+  has_preservation_method:
+    description: Predicate slot preservation method for the class biospecimen
+    required: true
+    range: preservation_method
 
 
 enums:
@@ -181,5 +187,20 @@ enums:
       include_self: false
       relationship_types:
         - rdfs:subClassOf
+  preservation_method:
+    name: preservation_method
+    enum_uri: obo:NCIT_C19232 # obo:Preservation method
+    description: >-
+      Procedures utilized to save substances from decay. Some preservation procedures are meant to maintain cells, 
+      tissues, or organisms in a viable state.
+    permissible_values:
+      FORMALDEHYDE_FIXED_PARAFFIN_EMBEDDED_FFPE:
+        description: >-
+          Refers to a process where a sample is preserved with formalin and then embedded into a paraffin block for 
+          sectioning.
+        meaning: obo:NCIT_C143028 # obo:Formalin-Fixed Paraffin-Embedded
+      FROZEN:
+        description: Tissue which has not been exposed to a fixative solution.
+        meaning: obo:NCIT_C84517 # obo:Fresh specimen
 
 
