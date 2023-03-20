@@ -5,6 +5,7 @@ prefixes:
   linkml: https://w3id.org/linkml/
   schema: http://schema.org/
   obo: http://purl.obolibrary.org/obo/
+  rdfs: http://www.w3.org/2000/01/rdf-schema#
 imports:
   - linkml:types
 default_range: string
@@ -25,6 +26,7 @@ classes:
       - acquired_with
       - processed_with_protocol
       - has_timepoint_label
+      - has_tumor_type
   Research_participant:
     name: Research_participant
     class_uri: obo:NCIT_C41189 # obo:Research subject
@@ -73,6 +75,9 @@ slots:
     description: Predicate slot timepoint label for the class biospecimen
     required: true
     range: timepoint_label
+  has_tumor_type:
+    description: Predicate slot tumor type for the class biospecimen
+    range: tumor_type
 
 
 enums:
@@ -164,3 +169,17 @@ enums:
       FINAL:
         description: The last time point.
         meaning: obo:NCIT_C182339 # obo:Final Time Point
+  tumor_type:
+    name: tumor_type
+    description: >-
+      Text string indicating the kind of disease present in the tumor specimen
+      as related to a specific time point.
+    reachable_from:
+      source_ontology: obo:ncit
+      source_nodes:
+        - NCIT:C7062
+      include_self: false
+      relationship_types:
+        - rdfs:subClassOf
+
+
