@@ -6,6 +6,7 @@ prefixes:
   schema: http://schema.org/
   obo: http://purl.obolibrary.org/obo/
   rdfs: http://www.w3.org/2000/01/rdf-schema#
+  bao:  http://www.bioassayontology.org/bao#
 imports:
   - linkml:types
 default_range: string
@@ -28,6 +29,11 @@ classes:
       - has_timepoint_label
       - has_tumor_type
       - has_preservation_method
+      - slide_charge
+      - processed_with_protocol
+      - section_thickness
+      #- sliced_using
+      - storage_temperature
   Research_participant:
     name: Research_participant
     class_uri: obo:NCIT_C41189 # obo:Research subject
@@ -37,11 +43,17 @@ classes:
       or data through the intervention or interaction with the individual.
     slots:
       - subject_id
+  Protocol:
+    name: Protocol
+    class_uri: obo:NCIT_C164368 # obo:Process Protocol
+    description: Protocol by which a biospecimen sample is obtained / generated
+    slots:
+      - protocol_doi
 
 slots:
   specimen_id:
     name: specimen_id
-    slot_uri: obo:NCIT_C178872 # obo:
+    slot_uri: obo:NCIT_C178872
     description: A unique identifier assigned to a biological specimen.
     identifier: true
   subject_id:
@@ -71,7 +83,12 @@ slots:
     required: true
   processed_with_protocol:
     description: Predicate protocol slot for biospecimen class to indicate which lab protocol was used to create data.
-    slot_uri: obo:NCIT_C132299 # obo:Protocol identifier
+    range: Protocol
+  protocol_doi:
+    description: DOI pointing to protocol used for processing the sample of biospecimen.
+    required: true
+    slot_uri: obo:NCIT_C71462 # obo:Digital Object Identifier
+    identifier: true
   has_timepoint_label:
     description: Predicate slot timepoint label for the class biospecimen
     required: true
@@ -84,7 +101,25 @@ slots:
     description: Predicate slot preservation method for the class biospecimen
     required: true
     range: preservation_method
-
+  slide_charge:
+    description: Predicate slot slide charge for the class biospecimen
+    required: true
+    range: slide_charge_type
+  section_thickness:
+    description: A measurement of the thickness of a sectioned slice (of tissue or mineral or other substance).
+    slot_uri: obo:NCIT_C176286 # obo:Section Thickness
+    required: true
+    range: float
+    unit:
+      ucum_code: um
+  #sliced_using:
+  storage_temperature:
+    description: A setting datum that specifies the temperature inside a container participating in a storage process.
+    slot_uri: obo:OBIB_0000689 # obo:Storage Temperature Setting
+    required: true
+    range: integer
+    unit:
+      ucum_code: Cel
 
 enums:
   biospecimen_type:
@@ -202,5 +237,23 @@ enums:
       FROZEN:
         description: Tissue which has not been exposed to a fixative solution.
         meaning: obo:NCIT_C84517 # obo:Fresh specimen
-
-
+  slide_charge_type:
+    name: slide_charge_type
+    enum_uri: obo:OBIB_0000323 # obo:description of glass slide charge
+    description: A textual entity that describes the carge on a glass slide.
+    permissible_values:
+      UNCHARGED:
+        description: An information content entity that indicates that a glass slide has not been positively charged.
+        meaning: obo:OBIB_0000325 # obo:uncharged glass slide indicator
+      CHARGED:
+        description: An information content entity that indicates that a glass slide has been positively charged.
+        meaning: obo:OBIB_0000324 # obo:charged glass slide indicator
+      COVERSLIP:
+        description: Coverslips are typically thin square pieces of glass
+        meaning: bao:BAO_0010021
+      # TODO add ontological term, none found at the moment.
+      COATED:
+        description: A slide coated with chemical for improved adhesion of specimen of biomolecules to the slide.
+      NOT_APPLICABLE:
+        description: Determination of a value is not relevant in the current context.
+        meaning: obo:NCIT_C48660 # obo:Not Applicable
