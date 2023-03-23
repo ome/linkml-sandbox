@@ -1,0 +1,259 @@
+id: https://www.miti-consortium.org/biospecimen
+name: biospecimen
+description: linkml metadata schema based on MITI biospecimen metadata
+prefixes:
+  linkml: https://w3id.org/linkml/
+  schema: http://schema.org/
+  obo: http://purl.obolibrary.org/obo/
+  rdfs: http://www.w3.org/2000/01/rdf-schema#
+  bao:  http://www.bioassayontology.org/bao#
+imports:
+  - linkml:types
+default_range: string
+
+classes:
+  Biospecimen:
+    name: Biospecimen
+    class_uri: obo:NCIT_C70699 # obo:Biospecimen
+    description: >-
+      Any material sample taken from a biological entity for testing, diagnostic, propagation, treatment or research
+      purposes, including a sample obtained from a living organism or taken from the biological object after halting of
+      all its life functions. Biospecimen can contain one or more components including but not limited to cellular 
+      molecules, cells, tissues, organs, body fluids, embryos, and body excretory products.
+    slots:
+      - specimen_id
+      - is_biospecimen_type
+      - has_parent
+      - acquired_with
+      - processed_with_protocol
+      - has_timepoint_label
+      - has_tumor_type
+      - has_preservation_method
+      - slide_charge
+      - processed_with_protocol
+      - section_thickness
+      #- sliced_using
+      - storage_temperature
+  Research_participant:
+    name: Research_participant
+    class_uri: obo:NCIT_C41189 # obo:Research subject
+    description: >-
+      A living person who is observed, analyzed, examined, investigated, experimented upon, and/or treated in the 
+      course of a clinical study. This includes studies where an investigator obtains identifiable private information 
+      or data through the intervention or interaction with the individual.
+    slots:
+      - subject_id
+  Protocol:
+    name: Protocol
+    class_uri: obo:NCIT_C164368 # obo:Process Protocol
+    description: Protocol by which a biospecimen sample is obtained / generated
+    slots:
+      - protocol_doi
+
+slots:
+  specimen_id:
+    name: specimen_id
+    slot_uri: obo:NCIT_C178872
+    description: A unique identifier assigned to a biological specimen.
+    identifier: true
+  subject_id:
+    slot_uri: obo:NCIT_C83083 # obo:Subject identifier
+    description: A sequence of characters used to identify, name, or characterize a trial or study subject.
+    identifier: true
+  is_biospecimen_type:
+    description: Predicate biospecimen type slot for the biospecimen class.
+    required: true
+    range: biospecimen_type
+  has_parent:
+    # TODO need to refine this so class biospecimen is either of class specimen or adjacent / parent biospecimen based on usage.
+    slot_uri: obo:NCIT_C175532 # obo:Parent Biospecimen
+    description: Predicate parent slot for biospecimen class.
+    required: true
+    any_of:
+      - range: Research_participant
+      - range: Biospecimen
+  acquired_with:
+    description: Predicate acquired with acquisition method slot for biospecimen class.
+    range: acquisition_method
+    required: true
+  # TODO change this into proper predicate, create analyte type class. Check whether slot_uri is correct
+  Analyte_type:
+    slot_uri: obo:NCIT_C177557 # obo:Molecular Test Analyte Type
+    description: The type of biospecimen subjected to analysis.
+    required: true
+  processed_with_protocol:
+    description: Predicate protocol slot for biospecimen class to indicate which lab protocol was used to create data.
+    range: Protocol
+  protocol_doi:
+    description: DOI pointing to protocol used for processing the sample of biospecimen.
+    required: true
+    slot_uri: obo:NCIT_C71462 # obo:Digital Object Identifier
+    identifier: true
+  has_timepoint_label:
+    description: Predicate slot timepoint label for the class biospecimen
+    required: true
+    range: timepoint_label
+  has_tumor_type:
+    description: Predicate slot tumor type for the class biospecimen
+    required: true
+    range: tumor_type
+  has_preservation_method:
+    description: Predicate slot preservation method for the class biospecimen
+    required: true
+    range: preservation_method
+  slide_charge:
+    description: Predicate slot slide charge for the class biospecimen
+    required: true
+    range: slide_charge_type
+  section_thickness:
+    description: A measurement of the thickness of a sectioned slice (of tissue or mineral or other substance).
+    slot_uri: obo:NCIT_C176286 # obo:Section Thickness
+    required: true
+    range: float
+    unit:
+      ucum_code: um
+  #sliced_using:
+  storage_temperature:
+    description: A setting datum that specifies the temperature inside a container participating in a storage process.
+    slot_uri: obo:OBIB_0000689 # obo:Storage Temperature Setting
+    required: true
+    range: integer
+    unit:
+      ucum_code: Cel
+
+enums:
+  biospecimen_type:
+    name: biospecimen_type
+    enum_uri: obo:NCIT_C70713 # obo:Biospecimen type
+    description: >-
+      The type of a material sample taken from a biological entity for testing, diagnostic, propagation, treatment or 
+      purposes. This includes particular types of cellular molecules, cells, tissues, organs, body fluids, embryos, 
+      and body excretory substances.
+    permissible_values:
+      TISSUE:
+        description: >- 
+          An anatomical structure consisting of similarly specialized cells and intercellular matrix, aggregated 
+          according to genetically determined spatial relationships, performing a specific function.
+        meaning: obo:NCIT_C12801 # obo:Tissue
+      BONE MARROW:
+        description: The tissue occupying the spaces of bone.
+        meaning: obo:NCIT_C12431 # obo:Bone Marrow
+      CELL BLOCK:
+        todos:  Unclear what is meant here, map to ontology
+      BLOOD:
+        description: >-
+          A tissue with red blood cells, white blood cells, platelets, and other substances suspended in fluid called 
+          plasma.
+        meaning: obo:NCIT_C12434 # obo:Blood
+      FLUIDS:
+        description: >-
+          Liquid substances produced by living organisms to fulfill specific functions or excreted as waste. Secretions 
+          do not include hormones or enzymes.
+        meaning: obo:NCIT_C13452 # obo: Other body fluids and secretions
+  acquisition_method:
+    name: acquisition_method
+    enum_uri: obo:NCIT_C70700 # obo:Biospecimen Collection Method
+    description: >- 
+      A method or procedure by which biological material is obtained from a subject for testing, diagnostic, treatment, 
+      or research purposes.
+    permissible_values:
+      AUTOPSY:
+        description: >-
+          A postmortem examination of the body that includes an examination of the internal organs and structures after 
+          dissection to determine the cause of death and the nature of pathological changes.
+        meaning: obo:NCIT_C25153 # obo:Autopsy
+      BIOPSY:
+        description: >-
+          A specimen collection that obtains a sample of tissue or cell from a living multicellular organism body for 
+          diagnostic purposes by means intended to be minimally invasive.
+        meaning: obo:OBI_0002650 # obo:Biopsy
+      SURGICAL RESECTION:
+        description: The surgical removal of an organ or a part of an organ.
+        meaning: obo:NCIT_C158758 # obo:Surgical Resection
+      PUNCH BIOPSY:
+        description: Removal of a disk of skin tissue, for microscopic examination, using a punch.
+        meaning: obo:NCIT_C28743 # obo:Punch Biopsy
+      SHAVE BIOPSY:
+        description: >- 
+          Removal skin tissue, for microscopic examination, using a blade oriented in the horizontal plane of the skin 
+          surface.
+        meaning: obo:NCIT_C15387 # obo:Shave Biopsy
+      EXCISION:
+        description: The surgical removal of a lesion, often as part of a biopsy and with healthy margins.
+        meaning: obo:NCIT_C15232 # obo:Excision
+      RE-EXCISION:
+        description: >-
+          A surgical procedure to remove the remaining abnormal tissues from the body, not completely removed in an 
+          earlier attempt.
+        meaning: obo:NCIT_C48600 # obo:Re-Excision
+      SENTINEL NODE BIOPSY:
+        description: >- 
+          Surgical removal and examination of the sentinel node, the lymph node which is first in
+          receiving the lymphatic drainage of a specified anatomic location and is most likely to be affected by 
+          the lymphatic spread of cancer.
+        meaning: obo:NCIT_C15667 # obo:Sentinel Lymph Node Biopsy
+      LYMPHADENECTOMY:
+        description: Surgical removal of lymph nodes, usually done to assess the spread of cancer.
+        meaning: obo:NCIT_C15275 # obo:Lymphadenectomy
+  timepoint_label:
+    name: timepoint_label
+    enum_uri: obo:NCIT_C68568 # obo:Timepoint
+    description: A specific point in the time continuum, including those established relative to an event.
+    permissible_values:
+      # TODO some values have no URI / IRI. Not found in ontobee. Some terms also ambigious.
+      BASELINE:
+        description: The point in time that acts as a fixed reference point to an event.
+        meaning: obo:NCIT_C82576 # obo:Reference Time Point
+      END_OF_TREATMENT:
+        description: Timepoint soon after treatment has ended (not more than 3 months).
+      OVERALL_SURVIVAL:
+      FINAL:
+        description: The last time point.
+        meaning: obo:NCIT_C182339 # obo:Final Time Point
+  tumor_type:
+    name: tumor_type
+    description: >-
+      Text string indicating the kind of disease present in the tumor specimen
+      as related to a specific time point.
+    reachable_from:
+      source_ontology: obo:ncit
+      source_nodes:
+        - NCIT:C7062
+      include_self: false
+      relationship_types:
+        - rdfs:subClassOf
+  preservation_method:
+    name: preservation_method
+    enum_uri: obo:NCIT_C19232 # obo:Preservation method
+    description: >-
+      Procedures utilized to save substances from decay. Some preservation procedures are meant to maintain cells, 
+      tissues, or organisms in a viable state.
+    permissible_values:
+      FORMALDEHYDE_FIXED_PARAFFIN_EMBEDDED_FFPE:
+        description: >-
+          Refers to a process where a sample is preserved with formalin and then embedded into a paraffin block for 
+          sectioning.
+        meaning: obo:NCIT_C143028 # obo:Formalin-Fixed Paraffin-Embedded
+      FROZEN:
+        description: Tissue which has not been exposed to a fixative solution.
+        meaning: obo:NCIT_C84517 # obo:Fresh specimen
+  slide_charge_type:
+    name: slide_charge_type
+    enum_uri: obo:OBIB_0000323 # obo:description of glass slide charge
+    description: A textual entity that describes the carge on a glass slide.
+    permissible_values:
+      UNCHARGED:
+        description: An information content entity that indicates that a glass slide has not been positively charged.
+        meaning: obo:OBIB_0000325 # obo:uncharged glass slide indicator
+      CHARGED:
+        description: An information content entity that indicates that a glass slide has been positively charged.
+        meaning: obo:OBIB_0000324 # obo:charged glass slide indicator
+      COVERSLIP:
+        description: Coverslips are typically thin square pieces of glass
+        meaning: bao:BAO_0010021
+      # TODO add ontological term, none found at the moment.
+      COATED:
+        description: A slide coated with chemical for improved adhesion of specimen of biomolecules to the slide.
+      NOT_APPLICABLE:
+        description: Determination of a value is not relevant in the current context.
+        meaning: obo:NCIT_C48660 # obo:Not Applicable
